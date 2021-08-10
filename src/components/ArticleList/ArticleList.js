@@ -3,15 +3,20 @@ import ArticleTeaser from '../ArticleTeaser/ArticleTeaser.js';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 
 class ArticleList extends Component {
+
+  printArticles = () => {
+    const { articles } = this.props
+    return articles.map((article, index) => (
+      <ListGroupItem>
+        <ArticleTeaser { ...article } id={ index + 1 } />
+      </ListGroupItem>
+    ))
+  }
+
   render() {
-    const { articles } = this.props;
     return (
       <ListGroup>
-        { articles.map((article, index) => (
-          <ListGroupItem>
-            <ArticleTeaser { ...article } id={ index + 1 } />
-          </ListGroupItem>
-        ))}
+        {this.printArticles()}
       </ListGroup>
     );
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ArticleList from '../components/ArticleList/ArticleList.js'
-import { fetchArticles } from '../api/ArticlesAPI';
+import { fetchArticles, searchArticles } from '../api/ArticlesAPI';
+import { Input, InputGroup } from 'reactstrap';
 
 class HomePage extends Component {
   state = {
@@ -16,9 +17,17 @@ class HomePage extends Component {
     }
   }
 
+  handlesearch = async (e) => {
+    const articlesJson = await searchArticles(e.target.value)
+    this.setState({articles: articlesJson })
+  }
+
   render() {
     return (
       <div>
+        <InputGroup>
+          <Input onChange={(e) => this.handlesearch(e)} type="text" placeholder="Search" />
+        </InputGroup>
         <ArticleList articles={this.state.articles} />
       </div>
     );

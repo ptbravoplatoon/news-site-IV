@@ -19,8 +19,16 @@ const fetchArticles = async (filters = null) => {
   return data;
 };
 
+const searchArticles = async (text) => {
+  const filter = {title: {ilike: text}}
+  const jsonfilter = JSON.stringify(filter)
+  const results = await fetchArticles(jsonfilter)
+  return results
+}
+
 export {
   fetchArticleByID,
   fetchArticles,
-  fetchArticlesBySection
+  fetchArticlesBySection,
+  searchArticles,
 };
