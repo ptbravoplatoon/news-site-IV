@@ -1,59 +1,32 @@
 import React, { Component } from 'react';
 import Article from '../components/Article/Article.js'
-import { fetchArticleByID } from '../api/ArticlesAPI';
+import ArticlesAPI from '../api/ArticlesAPI.js';
 
 class ArticlePage extends Component {
   state = {
     article: null
-  };
-
-  async componentDidMount() {
-    try {
-      const articleJson = await fetchArticleByID(this.props.match.params.articleID);
-      this.setState({ article: articleJson });
-    } catch (e) {
-      console.error('error fetching article: ', e);
-    }
   }
 
+  async componentDidMount(){
+    try{
+      const id = this.props.match.params.articleID;
+      const articleJson = await ArticlesAPI.fetchArticleByID(id);
+        this.setState({
+        article: articleJson
+      })
+    }
+    catch(error){
+      console.error('HomePage.componentDidMount: error fetching data.', error)
+    }
+  }
   render() {
     return (
       <div>
-        {this.state.article ? <Article {...this.state.article } /> :
-          <span>404: Article Not Found</span>
-        }
+        <div>Article Page</div>
+        {this.state.article && <Article {...(this.state.article)}/>}
       </div>
     );
   }
 }
 
 export default ArticlePage;
-
-
-// Functional solution:
-// function ArticlePage(props) {
-//   const [ article, setArticle ] = React.useState(null);
-
-//   React.useEffect(() => {
-//     const fetchArticleAsync = async () => {
-//       try {
-//         const articleJson = await fetchArticleByID(props.match.params.articleID);
-//         setArticle(articleJson);
-//       } catch (e) {
-//         console.error('error fetching article: ', e);
-//       }
-//     };
-
-//     if (article === null) {
-//       fetchArticleAsync();
-//     }
-//   }, [article]);
-
-//   return (
-//     <div>
-//       {article ? <Article {...article} /> :
-//         <span>404: Article Not Found</span>
-//       }
-//     </div>
-//   );
-// }

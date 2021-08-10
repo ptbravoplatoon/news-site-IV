@@ -1,26 +1,46 @@
-const BASE_URL = 'http://localhost:3001/api/articles';
+import Article from '../components/Article/Article'
 
-const fetchArticleByID = async (articleID) => {
-  const response = await fetch(`${BASE_URL}/${articleID}`);
-  const data = await response.json();
+async function fetchArticleByID(articleID){
+  let response = await fetch(`http://localhost:3001/api/articles/${articleID}`);
+  let data = await response.json();
   return data;
 };
 
-const fetchArticlesBySection = async (section) => {
-  const response = await fetch(`${BASE_URL}?filter={"where":{"section":"${section}"}}`);
-  const data = await response.json();
+async function fetchArticlesBySection(section){
+  let response = await fetch(`http://localhost:3001/api/articles?filter={"where":{"section":"${section}"}}`);
+  let data = await response.json();
   return data;
 };
 
-const fetchArticles = async (filters = null) => {
-  const url = filters ? `${BASE_URL}?filter={"where":${filters}}` : BASE_URL;
-  const response = await fetch(url);
-  const data = await response.json();
+async function fetchArticles(filters = null){
+  let response;
+  if(filters){
+    response = await fetch(`http://localhost:3001/api/articles?filter=${filters}`);
+  }
+  else{
+    response = await fetch(`http://localhost:3001/api/articles`);
+  }
+  let data = await response.json();
   return data;
 };
 
-export {
+async function searchArticles(text, section = null){
+  let response;
+  let textQuery = text ? `"title":{"ilike":"${text}"},` : "";
+  let sectionQuery = section ? `"section":"${section}"` : "";
+  if (section){
+    response = await fetch(`http://localhost:3001/api/articles?filter={"where":{${textQuery}${sectionQuery}}}`);
+  }
+  else{
+    response = await fetch(`http://localhost:3001/api/articles?filter={"where":{"title":{"ilike":"${text}"}}}`);
+  }
+  let data = await response.json();
+  return data;
+}
+
+export default {
   fetchArticleByID,
   fetchArticles,
-  fetchArticlesBySection
+  fetchArticlesBySection,
+  searchArticles
 };
