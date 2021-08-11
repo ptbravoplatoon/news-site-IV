@@ -1,43 +1,40 @@
 import React, { Component } from 'react';
 import ArticleList from '../components/ArticleList/ArticleList.js'
-import { fetchArticles, searchArticles } from '../api/ArticlesAPI';
-import { InputGroup , Input } from 'reactstrap'
+import { fetchArticlesBySection } from '../api/ArticlesAPI';
 
-class HomePage extends Component {
+class SectionPage extends Component {
   state = {
     articles: []
   };
 
   async componentDidMount() {
     try {
-      const articlesJson = await fetchArticles();
+      const articlesJson = await fetchArticlesBySection(this.props.match.params.sectionID);
+      
       this.setState({ articles: articlesJson });
     } catch (e) {
       console.error('error fetching articles: ', e);
     }
   }
 
-  async handleSearch(event) {
-    const textToSearchFor = event.target.value
-    let articlesJson = await searchArticles(textToSearchFor)
-    this.setState({
-      articles: articlesJson
-    })
+  async componentDidUpdate(prevProps) {
+    if (prevProps.match.params.sectionID !== this.props.match.params.sectionID) {
+      const articlesJson = await fetchArticlesBySection(this.props.match.params.sectionID);
+      this.setState({ articles: articlesJson });
+    }
+
   }
 
   render() {
     return (
       <div>
-        <InputGroup>
-          <Input type="text" placeholder="Search" onChange={(event) => this.handleSearch(event)}></Input>
-        </InputGroup>
         <ArticleList articles={this.state.articles} />
       </div>
     );
   }
 }
 
-export default HomePage;
+export default SectionPage;
 
 
 // Functional solution:
