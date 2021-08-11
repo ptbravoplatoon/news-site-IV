@@ -1,38 +1,32 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import ArticleList from '../components/ArticleList/ArticleList.js';
 import { fetchArticlesBySection } from '../api/ArticlesAPI';
 
-class SectionPage extends Component {
-	state = {
-		articles: []
-	};
+function SectionPage(props) {
+	const [ articles, setArticles ] = useState([]);
+	const { sectionID } = props.match.params;
 
-	async getSectionArticles() {
+	const getSectionArticles = async () => {
 		try {
-			const articleJson = await fetchArticlesBySection(this.props.match.params.sectionID);
-			this.setState({ articles: articleJson });
+			const articleJson = await fetchArticlesBySection(sectionID);
+			setArticles(articleJson);
 		} catch (e) {
 			console.error('error fetching article: ', e);
 		}
-	}
+	};
 
-	async componentDidMount() {
-		this.getSectionArticles();
-	}
+	useEffect(
+		async () => {
+			getSectionArticles();
+		},
+		[ sectionID ]
+	);
 
-	async componentDidUpdate(prevProps) {
-		if (this.props.match.params.sectionID !== prevProps.match.params.sectionID) {
-			this.getSectionArticles();
-		}
-	}
-
-	render() {
-		return (
-			<div>
-				<ArticleList articles={this.state.articles} />
-			</div>
-		);
-	}
+	return (
+		<div>
+			<ArticleList articles={articles} />
+		</div>
+	);
 }
 
 export default SectionPage;
