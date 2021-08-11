@@ -1,26 +1,52 @@
-const BASE_URL = 'http://localhost:3001/api/articles';
+const fetchArticleBySearchTerm = async (searchTerm) =>  {
+  let searchTermJSON = JSON.stringify(searchTerm)
+  let urlTail = `"where":{"title":{"ilike":${searchTermJSON}}}`
+  try{
+    let response = await fetch(`http://localhost:3001/api/articles?filter={${urlTail}}`)
+    let filteredNews = await response.json()
+    return filteredNews
+  } catch (error) {
+    console.log(error)
+  }
+};
+
 
 const fetchArticleByID = async (articleID) => {
-  const response = await fetch(`${BASE_URL}/${articleID}`);
-  const data = await response.json();
-  return data;
+  try{
+    let response = await fetch(`http://localhost:3001/api/articles/?filter={`)
+    let data = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 const fetchArticlesBySection = async (section) => {
-  const response = await fetch(`${BASE_URL}?filter={"where":{"section":"${section}"}}`);
-  const data = await response.json();
-  return data;
+  let urlTail = `"where":{"section":"${section}"}`
+  try{
+    console.log(urlTail)
+    let response = await fetch(`http://localhost:3001/api/articles?filter={${urlTail}}`)
+    let filteredNews = await response.json()
+    console.log(filteredNews)
+    return filteredNews
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 const fetchArticles = async (filters = null) => {
-  const url = filters ? `${BASE_URL}?filter={"where":${filters}}` : BASE_URL;
-  const response = await fetch(url);
-  const data = await response.json();
-  return data;
+  try{
+    let response = await fetch('http://localhost:3001/api/articles')
+    let data = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 export {
   fetchArticleByID,
   fetchArticles,
-  fetchArticlesBySection
+  fetchArticlesBySection,
+  fetchArticleBySearchTerm
 };

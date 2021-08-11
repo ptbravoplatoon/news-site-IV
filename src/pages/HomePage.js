@@ -1,55 +1,94 @@
 import React, { Component } from 'react';
 import ArticleList from '../components/ArticleList/ArticleList.js'
-import { fetchArticles } from '../api/ArticlesAPI';
+import News from '../data/news.json';
+import {fetchArticleByID, fetchArticles, fetchArticlesBySection, fetchArticleBySearchTerm} from '../api/ArticlesAPI'
+import { useState, useEffect } from 'react';
+import { InputGroup, Input } from 'reactstrap';
+
 
 class HomePage extends Component {
   state = {
-    articles: []
-  };
+    news : null
+  }
 
   async componentDidMount() {
     try {
-      const articlesJson = await fetchArticles();
-      this.setState({ articles: articlesJson });
-    } catch (e) {
-      console.error('error fetching articles: ', e);
+      const jsonResponse = await fetchArticles()
+      this.setState({
+        news: jsonResponse
+      });
+    } catch (error) {
+      console.error('Error occurred fetching data: ', error);
     }
   }
 
+handleSearch = async (e) => {
+    // (a) extract the value of the text input, 
+    let textToSearchFor = e.target.value
+    // (b) call ArticlesAPI.searchArticles(textToSearchFor), and then
+    let filteredNews = await fetchArticleBySearchTerm(textToSearchFor)
+    // (c) call this.setState() and set the json returned from the API to the "articles" object within your state object.
+    this.setState({news : filteredNews})
+  }
+
   render() {
-    return (
-      <div>
-        <ArticleList articles={this.state.articles} />
-      </div>
-    );
+    if (!this.state.news){
+      return <p>Loading...</p>
+    }
+    else {
+      return (
+        <div>
+          <InputGroup>
+            <Input onChange={async (e) => this.handleSearch(e)} type="text" placeholder="Search" />
+          </InputGroup>
+          <ArticleList articles={this.state.news}
+            handleTitleClick={(articleID) => this.props.history.push(`/articles/${articleID}`) } />
+        </div>
+      );
+    }
   }
 }
 
 export default HomePage;
 
 
-// Functional solution:
-// function HomePage(props) {
-//   const [ articles, setArticles ] = React.useState([]);
 
-//   React.useEffect(() => {
-//     const fetchArticlesAsync = async () => {
-//       try {
-//         const articlesJson = await fetchArticles();
-//         setArticles(articlesJson);
-//       } catch (e) {
-//         console.error('error fetching articles: ', e);
-//       }
-//     };
 
-//     if (!articles.length) {
-//       fetchArticlesAsync();
+// FUNCTIONAL VERSION _ UNFINISHED, WORKGIN WITH COMMENNTED SECTIONS
+// const HomePage = ({history}) => {
+//   const [news, setNews] = useState()
+
+//   // handleSearch = (e) => {
+//   //   // (a) extract the value of the text input, 
+//   //   // (b) call ArticlesAPI.searchArticles(textToSearchFor), and then 
+//   //   // (c) call this.setState() and set the json returned from the API to the "articles" object within your state object.
+//   // }
+  
+//   useEffect( () => {
+//     const getNews = async () => {
+//       const jsonResponse = await fetchArticles()
+//       setNews(jsonResponse)
 //     }
-//   }, [articles])
+//     getNews()
+//   }, [])
 
-//   return (
-//     <div>
-//       <ArticleList articles={articles} />
-//     </div>
-//   );
+    
+//     if (!news){
+//       return <p>Loading...</p>
+//     }
+//     else {
+//       return (
+//         <div>
+//           <InputGroup>
+//             <Input onChange={(e) => this.handleSearch(e)} type="text" placeholder="Search" />
+//           </InputGroup>
+//           <ArticleList articles={news}
+//             handleTitleClick={(articleID) => history.push(`/articles/${articleID}`) } />
+//         </div>
+//       );
+//     }
 // }
+
+// export default HomePage;
+
+
