@@ -1,55 +1,108 @@
 import React, { Component } from 'react';
 import ArticleList from '../components/ArticleList/ArticleList.js'
-import { fetchArticles } from '../api/ArticlesAPI';
+import News from '../data/news.json';
+import {fetchArticleByID, fetchArticles, fetchArticlesBySection, fetchArticleBySearchTerm} from '../api/ArticlesAPI'
+import { useState, useEffect } from 'react';
+import { InputGroup, Input } from 'reactstrap';
 
+// CLASS-BASED VERSION
 class HomePage extends Component {
   state = {
-    articles: []
-  };
+    news : null
+  }
 
   async componentDidMount() {
     try {
-      const articlesJson = await fetchArticles();
-      this.setState({ articles: articlesJson });
-    } catch (e) {
-      console.error('error fetching articles: ', e);
+      const jsonResponse = await fetchArticles()
+      let jsonResponseCopy= JSON.parse(JSON.stringify(jsonResponse))
+      console.log("Comp Did Mount :  ", jsonResponse, jsonResponseCopy)
+      for(let i=0; i < jsonResponseCopy.length; i++ ){
+        jsonResponseCopy[i]["id"] = i + 1
+      }
+      this.setState({
+        news: jsonResponse,
+        newsWithIDs : jsonResponseCopy
+      });
+
+      
+
+    } catch (error) {
+      console.error('Error occurred fetching data: ', error);
     }
   }
 
+handleSearch = async (e) => {
+    // (a) extract the value of the text input, 
+    let textToSearchFor = e.target.value
+    // (b) call ArticlesAPI.searchArticles(textToSearchFor), and then
+    let filteredNews = await fetchArticleBySearchTerm(textToSearchFor)
+    // (c) call this.setState() and set the json returned from the API to the "articles" object within your state object.
+    this.setState({newsWithIDs : filteredNews})
+  }
+
   render() {
-    return (
-      <div>
-        <ArticleList articles={this.state.articles} />
-      </div>
-    );
+    if (!this.state.newsWithIDs){
+      return <p>Loading...</p>
+    }
+    else {
+      return (
+        <div>
+          <InputGroup>
+            <Input onChange={async (e) => this.handleSearch(e)} type="text" placeholder="Search" />
+          </InputGroup>
+          <ArticleList articles={this.state.newsWithIDs}
+            handleTitleClick={(articleID) => this.props.history.push(`/articles/${articleID}`) } />
+        </div>
+      );
+    }
   }
 }
 
 export default HomePage;
 
 
-// Functional solution:
-// function HomePage(props) {
-//   const [ articles, setArticles ] = React.useState([]);
 
-//   React.useEffect(() => {
-//     const fetchArticlesAsync = async () => {
-//       try {
-//         const articlesJson = await fetchArticles();
-//         setArticles(articlesJson);
-//       } catch (e) {
-//         console.error('error fetching articles: ', e);
+
+// // FUNCTIONAL VERSION _ UNFINISHED, WORKING WITH COMMENTED SECTIONS
+// const HomePage = ({history}) => {
+//   const [news, setNews] = useState();
+//   const [searchTerm, setSearchTerm] = useState();
+
+//   let handleSearch = (e) => {
+//     setSearchTerm(e.target.value)
 //       }
-//     };
-
-//     if (!articles.length) {
-//       fetchArticlesAsync();
+  
+//   useEffect( () => {
+//     const getNews = async () => {
+//       if (!searchTerm){
+//         const jsonResponse = await fetchArticles()
+//         setNews(jsonResponse)
+//       }
+//       else {
+//         let filteredNews = await fetchArticleBySearchTerm(searchTerm)
+//         setNews(filteredNews)
+//       }
 //     }
-//   }, [articles])
+//     getNews()
+//   }, [searchTerm])
 
-//   return (
-//     <div>
-//       <ArticleList articles={articles} />
-//     </div>
-//   );
+    
+//     if (!news){
+//       return <p>Loading...</p>
+//     }
+//     else {
+//       return (
+//         <div>
+//           <InputGroup>
+//             <Input onChange={(e) => handleSearch(e)} type="text" placeholder="Search" />
+//           </InputGroup>
+//           <ArticleList articles={news}
+//             handleTitleClick={(articleID) => history.push(`/articles/${articleID}`) } />
+//         </div>
+//       );
+//     }
 // }
+
+// export default HomePage;
+
+

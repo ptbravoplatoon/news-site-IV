@@ -1,29 +1,39 @@
 import React, { Component } from 'react';
 import Article from '../components/Article/Article.js'
-import { fetchArticleByID } from '../api/ArticlesAPI';
+import News from '../data/news.json';
+import { fetchArticleByID } from '../api/ArticlesAPI.js';
 
 class ArticlePage extends Component {
   state = {
-    article: null
-  };
+    article : null
+  }
 
   async componentDidMount() {
-    try {
-      const articleJson = await fetchArticleByID(this.props.match.params.articleID);
-      this.setState({ article: articleJson });
-    } catch (e) {
-      console.error('error fetching article: ', e);
-    }
+    let fetchedArticle = await fetchArticleByID(this.props.match.params.articleID)
+    // jsonArticle = await 
+    this.setState({article : fetchedArticle })
   }
 
   render() {
-    return (
-      <div>
-        {this.state.article ? <Article {...this.state.article } /> :
-          <span>404: Article Not Found</span>
-        }
-      </div>
-    );
+    if (!this.state.article){
+      return (
+        <p>Loading... </p>
+      )
+    }
+    else {
+      // const image = this.state.article.multimedia.length ? this.state.article.multimedia[2].url : null;
+
+      return (
+        <div>
+          
+          {this.state.article ? <Article {...this.state.article } 
+          // image={ image } 
+          /> :
+            <span>404: Article Not Found</span>
+          }
+        </div>
+      );
+    }
   }
 }
 
@@ -32,26 +42,13 @@ export default ArticlePage;
 
 // Functional solution:
 // function ArticlePage(props) {
-//   const [ article, setArticle ] = React.useState(null);
-
-//   React.useEffect(() => {
-//     const fetchArticleAsync = async () => {
-//       try {
-//         const articleJson = await fetchArticleByID(props.match.params.articleID);
-//         setArticle(articleJson);
-//       } catch (e) {
-//         console.error('error fetching article: ', e);
-//       }
-//     };
-
-//     if (article === null) {
-//       fetchArticleAsync();
-//     }
-//   }, [article]);
+//   const articleIndex = props.match.params.articleID - 1;
+//   const article = News[articleIndex];
+//   const image = article.multimedia.length ? article.multimedia[2].url : null;
 
 //   return (
 //     <div>
-//       {article ? <Article {...article} /> :
+//       {article ? <Article { ...article } image={ image } /> :
 //         <span>404: Article Not Found</span>
 //       }
 //     </div>
