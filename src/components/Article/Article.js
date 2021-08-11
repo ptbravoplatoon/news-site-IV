@@ -4,14 +4,15 @@ import "./article.css";
 
 class Article extends Component {
   render() {
-    const { title, created_date: createdDate, abstract, byline, image } = this.props;
+    const { id, title, created_date: createdDate, abstract, byline, image } = this.props;
     return (
+      
       <Media>
         <Media left>
           { image && <img className="image" src={ image }/> }
         </Media>
         <Media body className="body">
-          <Media heading>{ title }</Media>
+          <Media heading>id {id} { title }</Media>
           <p>{ createdDate }</p>
           { byline && <p>{ byline }</p> }
           <p>{ abstract }</p>

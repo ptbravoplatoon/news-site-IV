@@ -9,14 +9,14 @@ class ArticleTeaser extends Component {
         taking the value of created_date from this.props and setting it to
         a new variable called createdDate
     */
-    const { id, title, created_date: createdDate, handleTitleClick } = this.props;
+    const { id, title, created_date: createdDate, handleTitleClick, byline, abstract } = this.props;
     return (
       <div>
         <ListGroupItemHeading>
           <Link to="" onClick={(e) => {
             e.preventDefault();
             handleTitleClick(id);
-            }}>{title}</Link>
+            }}>{id} {title} {byline} | {abstract}</Link>
         </ListGroupItemHeading>
         <ListGroupItemText>{ createdDate }</ListGroupItemText>
       </div>

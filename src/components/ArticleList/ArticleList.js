@@ -9,7 +9,7 @@ class ArticleList extends Component {
       <ListGroup>
         { articles.map((article, index) => (
           <ListGroupItem key = {`${article.title.slice(1,5)}-${index}`}>
-            <ArticleTeaser { ...article } id={ index + 1 }
+            <ArticleTeaser { ...article } 
               handleTitleClick={handleTitleClick}/>
           </ListGroupItem>
         ))}

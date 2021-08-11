@@ -13,7 +13,7 @@ const fetchArticleBySearchTerm = async (searchTerm) =>  {
 
 const fetchArticleByID = async (articleID) => {
   try{
-    let response = await fetch(`http://localhost:3001/api/articles/?filter={`)
+    let response = await fetch(`http://localhost:3001/api/articles/${articleID}`)
     let data = await response.json()
     return data
   } catch (error) {

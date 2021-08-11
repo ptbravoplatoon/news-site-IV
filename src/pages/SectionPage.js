@@ -45,7 +45,7 @@ class SectionPage extends Component {
       return (
         <div>
           <ArticleList articles={filteredNews}
-            handleTitleClick={(articleID) => history.push(`/articles/${articleID}`) } />
+            handleTitleClick={(articleID) => this.props.history.push(`/articles/${articleID}`) } />
         </div>
       );
     }
