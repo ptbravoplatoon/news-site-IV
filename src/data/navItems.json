@@ -1,0 +1,34 @@
+[
+  {
+    "label": "HOME",
+    "value": ""
+  },
+  {
+    "label": "OPINION",
+    "value": "sections/opinion"
+  },
+  {
+    "label": "WORLD",
+    "value": "sections/world"
+  },
+  {
+    "label": "NATIONAL",
+    "value": "sections/national"
+  },
+  {
+    "label": "POLITICS",
+    "value": "sections/politics"
+  },
+  {
+    "label": "UPSHOT",
+    "value": "sections/upshot"
+  },
+  {
+    "label": "NY REGION",
+    "value": "sections/nyregion"
+  },
+  {
+    "label": "BUSINESS",
+    "value": "sections/business"
+  }
+]

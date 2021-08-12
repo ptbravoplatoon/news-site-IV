@@ -1,35 +1,49 @@
-import React, { Component } from 'react';
-import { Navbar } from 'reactstrap';
-import navItems from '../../config/Sections.json';
-
-class AppNav extends Component {
-  render() {
-    const { handleNavClick } = this.props;
-
-    return (
-      <Navbar color="light">
-        {navItems.map((navItem) =>
-          <a href="#" onClick={ () => handleNavClick( navItem.value )} >
-            { navItem.label } |
-          </a>
-        )}
-      </Navbar>
-    )
+import React, { useState } from 'react';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
+const  AppNav = ({
+  //maps thru all nav items by index which are in json file in line 22
+  navItems, 
+  handleNavClick 
+}) => {
+  //open and close nav menu
+  //setCollapsed referred to line 12
+  const[collapsed,setCollapsed] = useState(true);
+  //toggle nav bar
+  const toggleNavbar = () => {
+    setCollapsed(!collapsed);
   }
+    return (
+      <div>
+    <Navbar color="faded" light>
+        <NavbarBrand href="/"   className="mr-auto">Menu</NavbarBrand>
+        <NavbarToggler onClick={toggleNavbar} className="mr-2" />
+        <Collapse isOpen={!collapsed} navbar>
+          <Nav navbar>
+          {navItems.map((navItem,index) =>
+            <NavItem key={index}>
+              <NavLink href="/" onClick={ (e) =>{ e.preventDefault(); toggleNavbar();  handleNavClick(navItem.value)}}>{navItem.label}</NavLink>
+            </NavItem>
+          )}
+          </Nav>
+        </Collapse>
+      </Navbar>
+    </div>
+    )
+
 }
 
 export default AppNav;
 
 
 // Functional solution:
-// function AppNav({ handleNavClick }) {
+// function AppNav({ navItems, handleNavClick }) {
 //   return (
-//     <Navbar color="light">
+//     <nav>
 //       {navItems.map((navItem) =>
-//         <a href="#" onClick={() => handleNavClick( navItem.value )} >
-//           { navItem.label } |
+//         <a href="#" onClick={() => handleNavClick(navItem.value)} >
+//           {navItem.label} |
 //         </a>
 //       )}
-//     </Navbar>
+//     </nav>
 //   );
 // }

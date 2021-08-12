@@ -1,36 +1,36 @@
-import React, { Component } from 'react';
-import { ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
-import { Link } from 'react-router-dom';
-
-class ArticleTeaser extends Component {
-  render() {
-    /* Note: the { created_date: createdDate } syntax in this destructure is
-        taking the value of created_date from this.props and setting it to
-        a new variable called createdDate
-    */
-    const { id, title, created_date: createdDate } = this.props;
-    return (
-      <div>
-        <ListGroupItemHeading>
-          <Link to={`/articles/${id}`}>{title}</Link>
-        </ListGroupItemHeading>
-        <ListGroupItemText>{ createdDate }</ListGroupItemText>
-      </div>
+import React from 'react';
+const ArticleTeaser = ({
+  id, 
+  title,
+  created_date: createdDate, 
+  handleTitleClick 
+}) => {
+     return (
+      <>
+      {/* printing an article with title, date, id */}
+       <h1><a href="/" onClick={ (e) =>{ e.preventDefault();  handleTitleClick(id); } }>{ title }</a></h1>
+        <p><strong>Created Date : </strong>{ createdDate } </p>
+        <div>
+          {/* creating onclick button prevents default button action from rendering */}
+            <div className="more label"><a href="/" className="btn btn-primary" onClick={ (e) =>{ e.preventDefault();  handleTitleClick(id); } } >Read more</a></div> 
+              
+        </div> 
+        <div className="clear"></div>
+        <hr></hr>
+      </>
     )
-  }
+
 }
 
 export default ArticleTeaser;
 
 
 // Functional solution:
-// function ArticleTeaser({ id, title, created_date: createdDate }) {
+// function ArticleTeaser({ id, title, created_date: createdDate, handleTitleClick }) {
 //   return (
 //     <div>
-//       <ListGroupItemHeading>
-//         <Link to={`/articles/${id}`}>{title}</Link>
-//       </ListGroupItemHeading>
-//       <ListGroupItemText>{createdDate}</ListGroupItemText>
+//       <a onClick={ () => handleTitleClick(id) }>{ title }</a>
+//       <p>{ createdDate }</p>
 //     </div>
 //   );
 // }
