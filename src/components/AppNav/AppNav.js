@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Navbar } from 'reactstrap';
 import navItems from '../../config/Sections.json';
 
 class AppNav extends Component {
   render() {
-    const { handleNavClick } = this.props;
 
     return (
       <Navbar color="light">
-        {navItems.map((navItem) =>
-          <a href="#" onClick={ () => handleNavClick( navItem.value )} >
-            { navItem.label } |
-          </a>
+        {navItems.map((navItem, index) =>
+          <Link to={`/sections/${navItem.value}`} key={index} > { navItem.label } |
+          </Link> 
         )}
       </Navbar>
     )

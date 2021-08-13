@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ArticleList from '../components/ArticleList/ArticleList.js'
 import { fetchArticles } from '../api/ArticlesAPI';
 
+// Class solution:
 class HomePage extends Component {
   state = {
     articles: []
@@ -9,17 +10,20 @@ class HomePage extends Component {
 
   async componentDidMount() {
     try {
-      const articlesJson = await fetchArticles();
-      this.setState({ articles: articlesJson });
-    } catch (e) {
-      console.error('error fetching articles: ', e);
+      const jsonResponse= await fetchArticles();
+      
+      this.setState({ 
+        articles: jsonResponse });
+    } catch (error) {
+      console.error('Error occurred fetching data: ', error);
     }
   }
 
   render() {
     return (
       <div>
-        <ArticleList articles={this.state.articles} />
+        {this.state.articles ? <ArticleList articles={this.state.articles}/>
+          : <span>Loading articles...</span> }
       </div>
     );
   }
