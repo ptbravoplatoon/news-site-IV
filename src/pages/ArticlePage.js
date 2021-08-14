@@ -9,19 +9,18 @@ class ArticlePage extends Component {
 
   async componentDidMount() {
     try {
-      const articleJson = await fetchArticleByID(this.props.match.params.articleID);
-      this.setState({ article: articleJson });
-    } catch (e) {
-      console.error('error fetching article: ', e);
+      const jsonResponse= await fetchArticleByID(this.props.match.params.articleID);
+      this.setState({ article: jsonResponse });
+    } catch (error) {
+      console.error('error fetching article: ', error);
     }
   }
 
   render() {
     return (
       <div>
-        {this.state.article ? <Article {...this.state.article } /> :
-          <span>404: Article Not Found</span>
-        }
+        {this.state.article ? <Article {...this.state.article } /> 
+          : <span>Loading articles...</span> }
       </div>
     );
   }

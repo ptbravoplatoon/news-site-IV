@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ArticleTeaser from '../ArticleTeaser/ArticleTeaser.js';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 
+
 class ArticleList extends Component {
   render() {
     const { articles } = this.props;
@@ -9,7 +10,7 @@ class ArticleList extends Component {
       <ListGroup>
         { articles.map((article, index) => (
           <ListGroupItem>
-            <ArticleTeaser { ...article } id={ index + 1 } />
+            <ArticleTeaser { ...article } id={ index + 1 } key = {index} />
           </ListGroupItem>
         ))}
       </ListGroup>
