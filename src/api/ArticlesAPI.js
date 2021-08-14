@@ -19,8 +19,15 @@ const fetchArticles = async (filters = null) => {
   return data;
 };
 
+const searchArticles = async (text) => {
+const response = await fetch(`${BASE_URL}?filter={"where":{"title":{"ilike":"${text}"}}}`);
+const data = await response.json();
+return data;
+};
+
 export {
   fetchArticleByID,
   fetchArticles,
-  fetchArticlesBySection
+  fetchArticlesBySection,
+  searchArticles
 };
